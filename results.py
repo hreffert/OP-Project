@@ -5,15 +5,18 @@ import json
 proxyObj = common.ProxyServer()
 
 
-def eachYear(url):
-  yearD = proxyObj.get_request(url)
-  idV = common.getValue('"id":"(.*?)"', yearD.text)
+def eachYear(url, out=None):
+  if out is None:
+    yearD = proxyObj.get_request(url)
+    out = yearD.text
+  
+  idV = common.getValue('"id":"(.*?)"', out)
   if idV is not None:
     print("Id is: ", idV)
     jsonUrl = "https://www.oddsportal.com/ajax-sport-country-tournament-archive_/1/"+str(idV)+"/X0/1/0/?_="+str(round(datetime.now().timestamp()))
     jsonVal = proxyObj.get_request(jsonUrl)
     jsonDec = jsonVal.text
-    if jsonDec != "Forbidden":
+    if jsonDec != "Forbidden.":
       jsonDec = json.loads(jsonDec)
       for one in jsonDec["d"]["rows"]:
         print("Time:", one['date-start-base'])
@@ -44,7 +47,7 @@ def eachResults(url):
     print("Years Select not found")
 
 #eachResults("https://www.oddsportal.com/football/albania/albanian-cup/results/")
-#eachYear("https://www.oddsportal.com/football/albania/albanian-cup-2021-2022/results/")
+#eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
 #exit()
 
 results = proxyObj.get_request("https://www.oddsportal.com/football/results/")
