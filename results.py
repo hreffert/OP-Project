@@ -1,11 +1,31 @@
 import common 
-
+from datetime import datetime
+import json
 
 proxyObj = common.ProxyServer()
 
 
 def eachYear(url):
-  print(url)
+  yearD = proxyObj.get_request(url)
+  idV = common.getValue('"id":"(.*?)"', yearD.text)
+  if idV is not None:
+    print("Id is: ", idV)
+    jsonUrl = "https://www.oddsportal.com/ajax-sport-country-tournament-archive_/1/"+str(idV)+"/X0/1/0/?_="+str(round(datetime.now().timestamp()))
+    jsonVal = proxyObj.get_request(jsonUrl)
+    jsonDec = jsonVal.text
+    if jsonDec != "Forbidden":
+      jsonDec = json.loads(jsonDec)
+      for one in jsonDec["d"]["rows"]:
+        print("Time:", one['date-start-base'])
+        print("Home:", one['home-name'])
+        print("Away:", one['away-name'])
+        print("H Score:", one['homeResult'])
+        print("A Score:", one['awayResult'])
+        print("\n-------------------------------------------------------------------\n")
+    else:
+      print("Error: ", jsonDec)
+  else:
+    print("Id not found")  
 
 def eachResults(url):
   league = proxyObj.get_request(url)
@@ -14,7 +34,7 @@ def eachResults(url):
     years =   common.getValue('value="(.*?)"', league.text, "yes")
     if years is not None:
       for year in years:
-        if url != year:
+        if url == year:
           eachYear(year, league.text)
         else:
           eachYear(year)
