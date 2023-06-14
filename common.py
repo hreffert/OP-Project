@@ -2,7 +2,7 @@ import time
 import requests
 import random
 import re
-
+from pymongo import MongoClient
 
 class ProxyServer:    
   
@@ -88,5 +88,15 @@ def getValue(regexVal, strVal, allR = "no"):
       return href
     else:  
       return href[0]
+      
+def get_mongoDb(uri):
+  try: 
+    client = MongoClient(uri)
+    # client = MongoClient(MONGO_HOST, 27017, username = MONGO_USER, password= MONGO_PASS)
+    print("Connected successfully!!!") 
+  except Exception as ex:   
+    print("Could not connect to MongoDB", ex)
+  db = client["fl"]
+  return db
         
         
