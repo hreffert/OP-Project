@@ -220,10 +220,10 @@ def setData(oddsId, fulltime, fHalf, sHalf, objC='No'):
 db = common.get_mongoDb(mongoUri)
 collection = db.TEST 
 #eachResults("https://www.oddsportal.com/football/albania/albanian-cup/results/")
-eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
+#eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
 #a = bets('https://www.oddsportal.com/football/africa/africa-cup-of-nations/rwanda-benin-AXWn6ma0/')
 #print(a)
-exit()
+#exit()
 
 db = common.get_mongoDb(mongoUri)
 collection = db.TEST
