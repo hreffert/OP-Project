@@ -41,7 +41,7 @@ def makeRequest(url, referer=False):
     try:
       print(f"Try No: {i+1} on url: {url}")
       r = proxyObj.get_request(url, nHeders)
-      print(r)
+      #print(r)
       if r.text == "Forbidden.":
         time.sleep(3)
         continue
@@ -51,6 +51,11 @@ def makeRequest(url, referer=False):
   exit("NO DATA")
   
 def eachYear(url, out=None):
+  global yearArr
+  if url in yearArr:
+    print("THIS YEAR ALREADY EXISTS")
+    return False
+  yearArr.append(url)
   data = {"yearURL":url, 'races':[]}
   try:
     if out is None:
@@ -79,12 +84,12 @@ def eachYear(url, out=None):
             '''
             print("\n-------------------------------------------------------------------\n")
             data['races'].append({'raceURL':url, 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
-            #break #testing
+            break #testing
         else:
           print("Error: ", jsonDec)
       except Exception as ex:
         print(f"EX: {ex}, eachYear inside tryExcept")
-      collection.insert_one(data)
+      collection.insert_one(data) #add check if exists before inserstion in code
       print("UPDATED INTO DB")
     else:
       print("Id not found")  
@@ -121,52 +126,55 @@ def bets(url):
     
     siteHtml = makeRequest(url)
     oddsId = html.unescape(common.getValue('<Event :data="(.*?)"', siteHtml.text)).replace('&nbsp;', ' ')
+    cusUrl =  common.getValue('match-event./1-(\d+)-', oddsId)
+    if cusUrl == None:
+      cusUrl = 1
     oddsId = json.loads(oddsId)['eventBody']['providersNames']
     
     try:
       #1X2
-      fulltime = getOdds(slug, oddsId, 2, 1, '1X2', url) 
-      fHalf = getOdds(slug, oddsId, 3, 1, '1X2', url)
-      sHalf = getOdds(slug, oddsId, 4, 1, '1X2', url)
+      fulltime = getOdds(slug, oddsId, 2, 1, '1X2', url, cusUrl) 
+      fHalf = getOdds(slug, oddsId, 3, 1, '1X2', url, cusUrl)
+      sHalf = getOdds(slug, oddsId, 4, 1, '1X2', url, cusUrl)
       newobj['1X2'] = setData(oddsId, fulltime, fHalf, sHalf)
     except Exception as ex:
       print(f"EX: {ex} in 1X2, url: {url}, datetime: {datetime.now()}")
 
     try:
       #over/under
-      fulltime = getOdds(slug, oddsId, 2, 2, 'over/under', url)
-      fHalf = getOdds(slug, oddsId, 3, 2, 'over/under', url)
-      sHalf = getOdds(slug, oddsId, 4, 2, 'over/under', url)
+      fulltime = getOdds(slug, oddsId, 2, 2, 'over/under', url, cusUrl)
+      fHalf = getOdds(slug, oddsId, 3, 2, 'over/under', url, cusUrl)
+      sHalf = getOdds(slug, oddsId, 4, 2, 'over/under', url, cusUrl)
       newobj['Over/Under'] = setData(oddsId, fulltime, fHalf, sHalf, "yes")
     except Exception as ex:
       print(f"EX: {ex} in over/under, url: {url}, datetime: {datetime.now()}")
 
     try:
       #asianHandicap
-      fulltime = getOdds(slug, oddsId, 2, 5, 'Asian Handicap', url)
-      fHalf = getOdds(slug, oddsId, 3, 5, 'Asian Handicap', url)
-      sHalf = getOdds(slug, oddsId, 4, 5, 'Asian Handicap', url)
+      fulltime = getOdds(slug, oddsId, 2, 5, 'Asian Handicap', url, cusUrl)
+      fHalf = getOdds(slug, oddsId, 3, 5, 'Asian Handicap', url, cusUrl)
+      sHalf = getOdds(slug, oddsId, 4, 5, 'Asian Handicap', url, cusUrl)
       newobj['Asian Handicap'] = setData(oddsId, fulltime, fHalf, sHalf, "yes")
     except Exception as ex:
       print(f"EX: {ex} in asianHandicap, url: {url}, datetime: {datetime.now()}")
     
     try:
       #bothteamscore
-      fulltime = getOdds(slug, oddsId, 2, 13, 'BTTS', url)
-      fHalf = getOdds(slug, oddsId, 3, 13, 'BTTS', url)
-      sHalf = getOdds(slug, oddsId, 4, 13, 'BTTS', url)
+      fulltime = getOdds(slug, oddsId, 2, 13, 'BTTS', url, cusUrl)
+      fHalf = getOdds(slug, oddsId, 3, 13, 'BTTS', url, cusUrl)
+      sHalf = getOdds(slug, oddsId, 4, 13, 'BTTS', url, cusUrl)
       newobj['BTTS'] = setData(oddsId, fulltime, fHalf, sHalf)
     except Exception as ex:
       print(f"EX: {ex} in bothteamscore, url: {url}, datetime: {datetime.now()}")
-      
+
   except Exception as ex:
     print(f"EX: {ex}, FUNCTION: bets, URL: {url}, datetime: {datetime.now()}")
-  
+    
   return newobj
       
-def getOdds(slug, oddsId, gTime, gType, dType, referer):
+def getOdds(slug, oddsId, gTime, gType, dType, referer, cusUrl):
   try:
-    link = f'https://www.oddsportal.com/feed/match-event/1-1-{slug}-{gType}-{gTime}-yja83.dat'
+    link = f'https://www.oddsportal.com/feed/match-event/1-{cusUrl}-{slug}-{gType}-{gTime}-yja83.dat'
     oddsJson = makeRequest(link, referer)
     oddsJson = oddsJson.json()
       
@@ -217,27 +225,27 @@ def setData(oddsId, fulltime, fHalf, sHalf, objC='No'):
   return obj
       
 
-db = common.get_mongoDb(mongoUri)
-collection = db.TEST 
-#eachResults("https://www.oddsportal.com/football/albania/albanian-cup/results/")
-#eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
-#a = bets('https://www.oddsportal.com/football/africa/africa-cup-of-nations/rwanda-benin-AXWn6ma0/')
-#print(a)
-#exit()
 
-db = common.get_mongoDb(mongoUri)
-collection = db.TEST
-results = makeRequest("https://www.oddsportal.com/football/results/")
-links = common.getValue('<li class="flex items-center.*?href="(.*?)"', results.text, "yes")
-print("Total links found: ", len(links))
+if __name__ == '__main__':
+  yearArr = []
+  db = common.get_mongoDb(mongoUri)
+  collection = db.TEST 
+  #eachResults("https://www.oddsportal.com/football/albania/albanian-cup/results/")
+  #eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
+  #a = bets('https://www.oddsportal.com/football/africa/africa-cup-of-nations/rwanda-benin-AXWn6ma0/')
+  #print(a)
+  #exit()
+  results = makeRequest("https://www.oddsportal.com/football/results/")
+  links = common.getValue('<li class="flex items-center.*?href="(.*?)"', results.text, "yes")
+  print("Total links found: ", len(links))
 
-with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
-  for one in links:
-    print("Scrap match: ", one)
-    validate = common.getValue('^/football/(\w+.*?)$', one)
-    if validate is not None:
-      executor.submit(eachResults, site + str(one))
-    else:
-      print("Invalid match link", one)
-    #break #testing
-    
+  with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
+    for one in links:
+      print("Scrap match: ", one)
+      validate = common.getValue('^/football/(\w+.*?)$', one)
+      if validate is not None:
+        executor.submit(eachResults, site + str(one))
+      else:
+        print("Invalid match link", one)
+      #break #testing
+      
