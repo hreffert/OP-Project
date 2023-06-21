@@ -83,7 +83,7 @@ def eachYear(url, out=None):
             print("A Score:", one['awayResult'])
             '''
             print("\n-------------------------------------------------------------------\n")
-            data['races'].append({'raceURL':url, 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
+            data['races'].append({'raceURL':url, 'country':common.getValue('oddsportal.*?/.*?/(.*?)/', url), 'game':common.getValue('oddsportal.*?/(.*?)/', url), 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
             break #testing
         else:
           print("Error: ", jsonDec)
