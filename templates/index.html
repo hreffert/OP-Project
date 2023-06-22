@@ -23,7 +23,16 @@
 			      <div class="form-group" style="display: flex;flex-direction: row;">
 			        <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-mdb-toggle="dropdown" aria-expanded="false">DataFrame</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dfDD">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="allSelections" />
+                          <label class="form-check-label" for="Checkme4">Select All</label>
+                        </div>
+                      </a>
+                    </li>
+                    <li><hr class="dropdown-divider" /></li>
                     <li>
                         <a class="dropdown-item" href="#">
                             <div class="form-check">
@@ -48,15 +57,6 @@
                             </div>
                         </a>
                     </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="allSelections" />
-                                <label class="form-check-label" for="Checkme4">Select All</label>
-                            </div>
-                        </a>
-                    </li>
                 </ul>
               </div>
 			        <div class="dropdown">
@@ -70,6 +70,7 @@
                             </div>
                         </a>
                     </li>
+                    <li><hr class="dropdown-divider" /></li>
                   {% for item in data %}
                     <li>
                       <a class="dropdown-item" href="#">
@@ -558,7 +559,8 @@
             <label class="form-check-label" for="Checkme4">Select All</label>
           </div>
         </a>
-      </li>`
+      </li>
+      <li><hr class="dropdown-divider" /></li>`
       arr.forEach(function(e){
         let html = `<li>
                       <a class="dropdown-item" href="#">
@@ -573,35 +575,27 @@
       return cDD
     }
 
+    function getCheckedFields(id){
+      let k = []
+      $(`#${id} li input:checked`).each(function(e, ele){
+        if (ele.value != 'allSelections'){
+          k.push(ele.value)
+        }
+      })
+      return k
+    }
+    
     function getFilterData(){
-      let cOUT = []
-      $('#countryDD li input:checked').each(function(e, ele){
-        if (ele.value != 'allSelections'){
-          cOUT.push(ele.value)
-        }
-      })
-      let lOUT = []
-      $('#leagueDD li input:checked').each(function(e, ele){
-        if (ele.value != 'allSelections'){
-          lOUT.push(ele.value)
-        }
-      })
-      /*let a = $('.dropdown-item').closest('div').find('input')
-      let data = []
-      a.each(function(e){
-        let ob = a.eq(e)
-        if(ob.is(':checked')){
-          let d = ob.attr('value')
-
-        }
-      })*/
-      return {'country':cOUT, 'league':lOUT}
+      let cOUT = getCheckedFields('countryDD')
+      let lOUT = getCheckedFields('leagueDD')
+      let dfOUT = getCheckedFields('dfDD')
+      return {'country':cOUT, 'league':lOUT, 'dataframe':dfOUT}
     }
     
     function filter(){
       let data = getFilterData()
       $.ajax({
-        url: `/filter?page=${1}&country=${data['country']}&league=${data['league']}`,
+        url: `/filter?page=${1}&country=${data['country']}&league=${data['league']}&df=${data['dataframe']}`,
         type: 'GET',
         success: function(res){
           tablemake(res.data)
@@ -613,6 +607,11 @@
     
     function tablemake(data){
       //console.log(436345377, data)
+      if (data.length == 0){
+        $('#rTable').html('')
+        return
+      }
+        
       let k = 0
       data.forEach(function(i, index){
         //console.log("SAFEFM", i['races'])

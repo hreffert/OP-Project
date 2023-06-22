@@ -42,22 +42,53 @@ def index():
 def filter():
   country = request.args.get('country').split(',')
   league = request.args.get('league').split(',')
+  dataFrame = request.args.get('df').split(',')
+  
   country = [re.compile(e.strip(), re.I) for e in country if e not in ['', ' ']]
   league = [x.strip() for x in league if x not in ['', ' ']]
   
   q = {'races':
               {'$elemMatch':
                             {'$and':
-                                  [{'country':
-                                              {'$in':country}
-                                   }, 
-                                   {'game':
-                                          {'$in':league}
-                                   }
-                                  ]
+                                    [
+                                    ]
                             }
               }
       }
+  if country == [] and league == [] and dataFrame == []:
+    q = {}
+  else:
+    if country != []:
+      q['races']['$elemMatch']['$and'].append({'country':{'$in':country}})
+    if league != []:
+      q['races']['$elemMatch']['$and'].append({'game':{'$in':league}})
+      
+    if dataFrame != []:
+      obj = {}
+      if 'TMatches' in dataFrame:
+        sDate = round(datetime.strptime(datetime.today().strftime('%Y-%m-%d'), '%Y-%m-%d').timestamp())
+        eDate = sDate + 86400 
+        obj['$gte'] = sDate 
+        obj['$lte'] = eDate
+        
+      if 'Database' in dataFrame:
+        sDate = round(datetime.now().timestamp())
+        obj['$lte'] = sDate
+        
+      if 'UpEvents' in dataFrame:
+        sDate = round(datetime.now().timestamp())
+        obj['$gte'] = sDate
+        
+      if 'UpEvents' in dataFrame and 'Database' in dataFrame:
+        pass
+      else:
+        q['races']['$elemMatch']['$and'].append({'Time':obj})  
+    
+    
+  if len(q['races']['$elemMatch']['$and']) == 0:
+    q = {}
+    
+  #print(22, q)
   a = db.TEST.find(q, {'_id':0})
   data = [x for x in a]
   return {"status":200, "data":data}
