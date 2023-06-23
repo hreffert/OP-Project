@@ -99,8 +99,13 @@ def eachYear(url, out=None):
           print("Error: ", jsonDec)
       except Exception as ex:
         print(f"EX: {ex}, eachYear inside tryExcept")
-      collection.insert_one(data) #add check if exists before inserstion in code
-      print("UPDATED INTO DB")
+        
+      if collection.find_one({'yearURL':data['yearURL']}) == {}:
+        collection.insert_one(data)
+        print("INSERTING INTO DB")
+      else:
+        collection.update_one({'yearURL':data['yearURL']}, {'$unset':data})
+        print("UPDATEING INTO DB")
     else:
       print("Id not found")  
   except Exception as ex:
