@@ -33,7 +33,7 @@ headers = {
 site = 'https://www.oddsportal.com'
 yearArr = []
 db = common.get_mongoDb(mongoUri)
-collection = db.TEST 
+collection = db.ODDS 
 
 def makeRequest(url, referer=False):
   nHeders = headers.copy()

@@ -23,7 +23,7 @@ site = 'https://www.oddsportal.com'
 games = ['football', 'basketball', 'baseball', 'hockey', 'tennis', 'american-football', 'aussie-rules', 'badminton', 'beach-soccer', 'beach-volleyball', 'boxing', 'cricket', 'darts', 'esports', 'futsal', 'mma', 'pesapallo', 'rugby-league', 'rugby-union', 'table-tennis', 'volleyball', 'water-polo']
   
 db = get_mongoDb(mongoUri)
-collection = db.TEST 
+collection = db.ODDS 
 
 def scrap(game, obj):
   try:
