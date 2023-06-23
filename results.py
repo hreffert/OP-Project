@@ -31,6 +31,9 @@ headers = {
 
 
 site = 'https://www.oddsportal.com'
+yearArr = []
+db = common.get_mongoDb(mongoUri)
+collection = db.TEST 
 
 def makeRequest(url, referer=False):
   nHeders = headers.copy()
@@ -224,22 +227,13 @@ def setData(oddsId, fulltime, fHalf, sHalf, objC='No'):
     print(f"EX: {ex}, FUNCTION: setData, datetime: {datetime.now()}")
   return obj
       
-
-
-if __name__ == '__main__':
-  yearArr = []
-  db = common.get_mongoDb(mongoUri)
-  collection = db.TEST 
-  #eachResults("https://www.oddsportal.com/football/albania/albanian-cup/results/")
-  #eachYear("https://www.oddsportal.com/football/africa/africa-cup-of-nations/results/")
-  #a = bets('https://www.oddsportal.com/football/africa/africa-cup-of-nations/rwanda-benin-AXWn6ma0/')
-  #print(a)
-  #exit()
+def start():
   results = makeRequest("https://www.oddsportal.com/football/results/")
   links = common.getValue('<li class="flex items-center.*?href="(.*?)"', results.text, "yes")
   print("Total links found: ", len(links))
 
-  with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
+  executor = concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count)
+  if True:#with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
     for one in links:
       print("Scrap match: ", one)
       validate = common.getValue('^/football/(\w+.*?)$', one)
@@ -248,4 +242,9 @@ if __name__ == '__main__':
       else:
         print("Invalid match link", one)
       #break #testing
+      
+if __name__ == '__main__':
+  start()
+
+  
       

@@ -3,6 +3,8 @@ from flask_pymongo import PyMongo
 import time
 from datetime import datetime
 import re
+import todaysMatchs
+import results
 
 app = Flask(__name__)
 
@@ -46,6 +48,7 @@ def filter():
   
   country = [re.compile(e.strip(), re.I) for e in country if e not in ['', ' ']]
   league = [x.strip() for x in league if x not in ['', ' ']]
+  dataFrame = [x.strip() for x in dataFrame if x not in ['', ' ']]
   
   q = {'races':
               {'$elemMatch':
@@ -56,7 +59,8 @@ def filter():
               }
       }
   if country == [] and league == [] and dataFrame == []:
-    q = {}
+    #q = {}
+    pass
   else:
     if country != []:
       q['races']['$elemMatch']['$and'].append({'country':{'$in':country}})
@@ -88,10 +92,20 @@ def filter():
   if len(q['races']['$elemMatch']['$and']) == 0:
     q = {}
     
-  #print(22, q)
+    #print(22, q)
   a = db.TEST.find(q, {'_id':0})
   data = [x for x in a]
   return {"status":200, "data":data}
+  
+@app.route('/launchScrap', methods = ['GET'])
+def startScrap():
+  script = request.args.get('script')
+  print(script)
+  if 'tResults' == script:
+    todaysMatchs.start()
+  elif 'results' == script:
+    results.start()
+  return {"status":200, "data":"SCRAPING HAS STARTED"}
   
 if __name__ == '__main__':
   app.run(app, debug=True)
