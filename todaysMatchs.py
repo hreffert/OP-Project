@@ -46,7 +46,7 @@ def scrap(game, obj):
           continue
         allUrls.append(url)
       obj['races'].append({'raceURL':url, 'country':one.get('country-name'), "season": getValue('https://www\.oddsportal\.com/.*?/.*?/(.*?)/', url), 'game':game, 'Odds':bets(url), 'Time':one.get('date-start-base'), 'Home':one.get('home-name'), 'Away': one.get('away-name'), 'H Score':one.get('homeResult'), 'A Score':one.get('awayResult')})
-      break #testing
+      #break #testing
   except Exception as ex:
     print(ex)
 
