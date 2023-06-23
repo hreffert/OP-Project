@@ -74,20 +74,27 @@ def eachYear(url, out=None):
         jsonDec = jsonVal.text
         if jsonDec != "Forbidden.":
           jsonDec = json.loads(jsonDec)
+          allurls = []
           for one in jsonDec["d"]["rows"]:
-            url = site + one['url']
-            '''
-            print("Url:", url)
-            print("Odds:", bets(url))
-            print("Time:", one['date-start-base'])
-            print("Home:", one['home-name'])
-            print("Away:", one['away-name'])
-            print("H Score:", one['homeResult'])
-            print("A Score:", one['awayResult'])
-            '''
-            print("\n-------------------------------------------------------------------\n")
-            data['races'].append({'raceURL':url, 'country':common.getValue('oddsportal.*?/.*?/(.*?)/', url), 'game':common.getValue('oddsportal.*?/(.*?)/', url), 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
-            break #testing
+            try:
+              url = site + one['url']
+              if url in allurls:
+                continue
+              allurls.append(url)
+              '''
+              print("Url:", url)
+              print("Odds:", bets(url))
+              print("Time:", one['date-start-base'])
+              print("Home:", one['home-name'])
+              print("Away:", one['away-name'])
+              print("H Score:", one['homeResult'])
+              print("A Score:", one['awayResult'])
+              '''
+              print("\n-------------------------------------------------------------------\n")
+              data['races'].append({'raceURL':url, 'country':common.getValue('oddsportal.*?/.*?/(.*?)/', url), "season": common.getValue('oddsportal.*?/.*?/.*?/(.*?)/', url), 'game':common.getValue('oddsportal.*?/(.*?)/', url), 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
+              break #testing
+            except:
+              pass
         else:
           print("Error: ", jsonDec)
       except Exception as ex:
@@ -232,8 +239,8 @@ def start():
   links = common.getValue('<li class="flex items-center.*?href="(.*?)"', results.text, "yes")
   print("Total links found: ", len(links))
 
-  executor = concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count)
-  if True:#with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
+  #executor1 = concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count)
+  with concurrent.futures.ThreadPoolExecutor(max_workers=eachResultsT_count) as executor:
     for one in links:
       print("Scrap match: ", one)
       validate = common.getValue('^/football/(\w+.*?)$', one)

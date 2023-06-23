@@ -71,7 +71,7 @@
                         </a>
                     </li>
                     <li><hr class="dropdown-divider" /></li>
-                  {% for item in data %}
+                  {% for item in data.country %}
                     <li>
                       <a class="dropdown-item" href="#">
                         <div class="form-check">
@@ -91,41 +91,27 @@
               </div>
               <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton4" data-mdb-toggle="dropdown" aria-expanded="false">Season Selection</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" />
-                                <label class="form-check-label" for="Checkme1">Check me</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" />
-                                <label class="form-check-label" for="Checkme2">Check me</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" />
-                                <label class="form-check-label" for="Checkme3">Check me</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="allSelections" />
-                                <label class="form-check-label" for="Checkme4">Select All</label>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="seasonDD">
+                  <li>
+                      <a class="dropdown-item" href="#">
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="allSelections" />
+                              <label class="form-check-label" for="Checkme4">Select All</label>
+                          </div>
+                      </a>
+                  </li>
+                  <li><hr class="dropdown-divider" /></li>
+                {% for item in data.seasons %}
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{item}}" />
+                        <label class="form-check-label" for="Checkme1">{{item}}</label>
+                      </div>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
               </div>
               <!--<div class="range_container">
                   <div class="sliders_control">
@@ -318,7 +304,7 @@
           Swal.fire({text:res.data, icon:"success",buttonsStyling:!1,confirmButtonText:"Ok, got it!",customClass:{confirmButton:"btn btn-primary"}})
         }
       })
-      console.log($(this).attr('id'))
+      //console.log($(this).attr('id'))
     })
     
     function createDropDownFromArr(arr){
@@ -359,13 +345,14 @@
       let cOUT = getCheckedFields('countryDD')
       let lOUT = getCheckedFields('leagueDD')
       let dfOUT = getCheckedFields('dfDD')
-      return {'country':cOUT, 'league':lOUT, 'dataframe':dfOUT}
+      let seasonOUT = getCheckedFields('seasonDD')
+      return {'country':cOUT, 'league':lOUT, 'dataframe':dfOUT, 'season':seasonOUT}
     }
     
     function filter(){
       let data = getFilterData()
       $.ajax({
-        url: `/filter?page=${1}&country=${data['country']}&league=${data['league']}&df=${data['dataframe']}`,
+        url: `/filter?page=${1}&country=${data['country']}&league=${data['league']}&df=${data['dataframe']}&season=${data['season']}`,
         type: 'GET',
         success: function(res){
           tablemake(res.data)
@@ -376,17 +363,19 @@
     }
     
     function tablemake(data){
-      //console.log(436345377, data)
-      if (data.length == 0){
-        $('#rTable').html('')
-        return
-      }
-        
+      $('#rTable').html('')        
       let k = 0
       data.forEach(function(i, index){
-        //console.log("SAFEFM", i['races'])
+        //console.log("SAFEFM", i['races'], Array.isArray(i['races']))
+        if (!Array.isArray(i['races'])){
+          i['races'] = [i['races']]
+        }
         i['races'].forEach(function(l, indexi){
-          //console.log(88888, l)
+          //l = l[0]
+          //if (l == undefined){
+          //  return
+          //}
+          //console.log(88888, Object.keys(l))
           k++
           tr = `
           <tr class="alert" role="alert" id="tr${1}">
