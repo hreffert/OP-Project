@@ -19,7 +19,15 @@ eachYearT_count = int(threadCounts['eachYear'])
 credentails = config_object['Credentials']
 mongoUri = credentails['mongo']
 
-proxyObj = common.ProxyServer()
+#proxy
+proxy = config_object['Proxy']
+proxy = proxy['useProxy']
+if proxy.lower() == 'false':
+  proxy = False
+else:
+  proxy = True
+
+proxyObj = common.ProxyServer(enableProxies=proxy)
 
 headers = {
   'accept': 'application/json, text/plain, */*',
@@ -32,8 +40,6 @@ headers = {
 
 site = 'https://www.oddsportal.com'
 yearArr = []
-db = common.get_mongoDb(mongoUri)
-collection = db.ODDS 
 
 def makeRequest(url, referer=False):
   nHeders = headers.copy()
@@ -51,15 +57,17 @@ def makeRequest(url, referer=False):
       return r
     except Exception as ex:
       print(f"EX in request: {ex}, datetime: {datetime.now()}")
-  exit("NO DATA")
+  #exit("NO DATA")
   
 def eachYear(url, out=None):
+  ye = url[1]
+  url = url[0]
   global yearArr
   if url in yearArr:
     print("THIS YEAR ALREADY EXISTS")
     return False
   yearArr.append(url)
-  data = {"yearURL":url, 'races':[]}
+  data = {"yearURL":url, 'races':[], 'year':ye}
   try:
     if out is None:
       yearD = makeRequest(url)
@@ -91,7 +99,7 @@ def eachYear(url, out=None):
               print("A Score:", one['awayResult'])
               '''
               print("\n-------------------------------------------------------------------\n")
-              data['races'].append({'raceURL':url, 'country':common.getValue('oddsportal.*?/.*?/(.*?)/', url), "season": common.getValue('oddsportal.*?/.*?/.*?/(.*?)/', url), 'game':common.getValue('oddsportal.*?/(.*?)/', url), 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
+              data['races'].append({'raceURL':url, 'country':common.getValue('oddsportal.*?/.*?/(.*?)/', url), "league": common.getValue('oddsportal.*?/.*?/.*?/(.*?)/', url), 'game':common.getValue('oddsportal.*?/(.*?)/', url), 'Odds':bets(url), 'Time':one['date-start-base'], 'Home':one['home-name'], 'Away': one['away-name'], 'H Score':one['homeResult'], 'A Score':one['awayResult']})
               #break #testing
             except:
               pass
@@ -100,11 +108,11 @@ def eachYear(url, out=None):
       except Exception as ex:
         print(f"EX: {ex}, eachYear inside tryExcept")
         
-      if collection.find_one({'yearURL':data['yearURL']}) == {}:
+      if collection.find_one({'yearURL':data['yearURL']}) == None:
         collection.insert_one(data)
         print("INSERTING INTO DB")
       else:
-        collection.update_one({'yearURL':data['yearURL']}, {'$unset':data})
+        collection.update_one({'yearURL':data['yearURL']}, {'$set':data})
         print("UPDATEING INTO DB")
     else:
       print("Id not found")  
@@ -117,14 +125,14 @@ def eachResults(url):
     league = makeRequest(url)
     yearsSelect = common.getValue('<select class="int-select(.*?)</select', league.text)
     if yearsSelect is not None:
-      years =   common.getValue('value="(.*?)"', league.text, "yes")
+      years = common.getValue('value="(.*?)".*?>\s*(\d+)\s*</op', league.text, "yes")
       if years is not None:
         with concurrent.futures.ThreadPoolExecutor(max_workers=eachYearT_count) as executor:
           for year in years:  
             if url == year:
               executor.submit(eachYear, year, league.text)
             else:
-              executor.submit(year)
+              executor.submit(eachYear, year)
             #break #testing
       else:
         print("Years not found")      
@@ -239,7 +247,9 @@ def setData(oddsId, fulltime, fHalf, sHalf, objC='No'):
     print(f"EX: {ex}, FUNCTION: setData, datetime: {datetime.now()}")
   return obj
       
-def start():
+def start(db):
+  global collection
+  collection = db.ODDS
   results = makeRequest("https://www.oddsportal.com/football/results/")
   links = common.getValue('<li class="flex items-center.*?href="(.*?)"', results.text, "yes")
   print("Total links found: ", len(links))
@@ -256,7 +266,10 @@ def start():
       #break #testing
       
 if __name__ == '__main__':
-  start()
+  db = common.get_mongoDb(mongoUri)
+  start(db)
+#  k = bets('https://www.oddsportal.com/football/bolivia/division-profesional/vaca-diez-aurora-KWLo4Rge/')
+#  print(k)
 
   
       
