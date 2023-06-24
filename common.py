@@ -6,8 +6,8 @@ from pymongo import MongoClient
 
 class ProxyServer:    
   
-  def __init__(self):
-    self.enableProxies = False
+  def __init__(self, enableProxies=False):
+    self.enableProxies = enableProxies
     
     if self.enableProxies == True:
       with open("proxies.txt") as f:
@@ -36,7 +36,7 @@ class ProxyServer:
         if user_agent == False:
           user_agent = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'}
 
-        print("GET", url)
+        #print("GET", url)
         r = requests.get(url, headers=user_agent, proxies=proxyObj)
         time.sleep(5)
         return r
