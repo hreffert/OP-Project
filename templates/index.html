@@ -21,7 +21,7 @@
 				  <div class="row">
 			      <div class="form-group" style="display: flex;flex-direction: row;">
 			        <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-mdb-toggle="dropdown" aria-expanded="false">DataFrame</button>
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-mdb-toggle="dropdown" aria-expanded="false">DataFrame</button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dfDD">
                     <li>
                       <a class="dropdown-item" href="#">
@@ -59,7 +59,7 @@
                 </ul>
               </div>
 			        <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton2" data-mdb-toggle="dropdown" aria-expanded="false">Country Selection</button>
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-mdb-toggle="dropdown" aria-expanded="false">Country Selection</button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="countryDD">
                     <li>
                         <a class="dropdown-item" href="#">
@@ -89,7 +89,7 @@
                 </ul>
               </div>
               <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton3" data-mdb-toggle="dropdown" aria-expanded="false">League Selection</button>
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-mdb-toggle="dropdown" aria-expanded="false">League Selection</button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="leagueDD">
                   <li>
                       <a class="dropdown-item" href="#">
@@ -122,7 +122,7 @@
                 </ul>
               </div>
               <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton4" data-mdb-toggle="dropdown" aria-expanded="false">Season Selection</button>
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton4" data-mdb-toggle="dropdown" aria-expanded="false">Season Selection</button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="seasonDD">
                   <li>
                       <a class="dropdown-item" href="#">
@@ -264,16 +264,16 @@
 				  <button id="results" class="btn btn-sm btn-success">START SCRAPPING</button>
 				  <button id="tResults" class="btn btn-sm btn-success">START TODAY MATCHS SCRAPPING</button>
 					<div class="table-wrap">
-						<table class="table table-responsive-xl">
+						<table class="table table-responsive-xl" >
 						  <thead>
 						    <tr>
-						    	<th>SL. No<!--<a href="#" id="slSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--> </th>
-						    	<th>Country<!--<a href="#" id="asinSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
-						      <th>Race URL<!--<a href="#" id="statusSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
-						      <th>1X2<!--<a href="#" id="lastScrapSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
-						      <th>Asian Handicap<!--<a href="#" id="scrapeSsort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
-						      <th>BTTS<!--<a href="#" id="deliverySort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
-						      <th>Over/Under<!--<a href="#" id="earSort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
+						    	<th class="text-dark">SL. No<!--<a href="#" id="slSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--> </th>
+						    	<th class="text-dark">Country<!--<a href="#" id="asinSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
+						      <th class="text-dark">Race URL<!--<a href="#" id="statusSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
+						      <th class="text-dark">1X2<!--<a href="#" id="lastScrapSort" class="sorting"><i class="fa fa-fw fa-sort"></i></a>--></th>
+						      <th class="text-dark">Asian Handicap<!--<a href="#" id="scrapeSsort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
+						      <th class="text-dark">BTTS<!--<a href="#" id="deliverySort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
+						      <th class="text-dark">Over/Under<!--<a href="#" id="earSort" class="sorting"> <i class="fa fa-fw fa-sort"></i></a>--></th>
 						      <!--<th>DELETE ASIN</th>-->
 						      <!--<th>&nbsp;</th>-->
 						    </tr>
@@ -281,14 +281,14 @@
 						  <tbody id="rTable">
 						  </tbody>
 						</table>
-            <ul class="d-flex pagination" style="float: right;">
+<!--            <ul class="d-flex pagination" style="float: right;">
               <li class="page-item" id="pp">
                 <a id="prev" class="page-link">Previous</a>
               </li>
               <li class="page-item" id="np">
                 <a id="next" class="page-link">Next</a>
               </li>
-            </ul>
+            </ul>-->
 					</div>
 				</div>
 			</div>
@@ -300,15 +300,14 @@
   <script src="static/js/bootstrap.min.js"></script>
   <script src="static/js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
   <style>
     .dropdown {margin-right:10px;}    
     button {
       margin: 1px;
     }
     .dropdown-menu {
-    max-height: 280px;
-    overflow-y: auto;
+      max-height: 280px;
+      overflow-y: auto;
     }
   </style>
   <script>
@@ -442,22 +441,22 @@
           tr = `
           <tr class="alert" role="alert" id="tr${1}">
             <td>
-	            <label class="checkbox-wrap checkbox-primary">
-                <span>${k}</span>
+	            <label class="checkbox-wrap">
+                <span class="text-success">${k}</span>
               </label>
             </td>
             <td>
-	            <label class="checkbox-wrap checkbox-primary">
-                <span>${l['raceURL'].split('/')[4]}</span>
+	            <label class="checkbox-wrap">
+                <span class="text-secondary">${l['raceURL'].split('/')[4]}</span>
               </label>
             </td>
             <td class="align-items-center">
 	            <div class="pl-3">
-		            <span>${l['raceURL']}</span>
+		            <span><a href="${l['raceURL']}">${l['raceURL']}</a></span>
 	            </div>
             </td>
             <td class="align-items-center">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter1x2${k}">
+              <button type="button" class="btn btn-secondary  " data-toggle="modal" data-target="#exampleModalCenter1x2${k}">
                 Show Odds
               </button>
 
@@ -479,7 +478,7 @@
               </div>
             </td>
             <td class="align-items-center">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAH05${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterAH05${k}">
                 Odds 0.5
               </button>
 
@@ -499,7 +498,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAH15${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterAH15${k}">
                 Odds 1.5
               </button>
 
@@ -519,7 +518,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAH25${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterAH25${k}">
                 Odds 2.5
               </button>
 
@@ -539,7 +538,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterAH35${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterAH35${k}">
                 Odds 3.5
               </button>
 
@@ -561,7 +560,7 @@
               </div>
             </td>
             <td class="align-items-center">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterBTTS${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterBTTS${k}">
                 Show Odds
               </button>
 
@@ -583,7 +582,7 @@
               </div>
             </td>
             <td class="align-items-center">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterOU05${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterOU05${k}">
                 Odds 0.5
               </button>
 
@@ -603,7 +602,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterOU15${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterOU15${k}">
                 Odds 1.5
               </button>
 
@@ -623,7 +622,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterOU25${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterOU25${k}">
                 Odds 2.5
               </button>
 
@@ -643,7 +642,7 @@
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenterOU35${k}">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenterOU35${k}">
                 Odds 3.5
               </button>
 
