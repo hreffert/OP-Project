@@ -5,7 +5,7 @@ import html
 import time
 import concurrent.futures
 from configparser import ConfigParser
-from common import getValue, get_mongoDb
+from common import getValue
 
 config_object = ConfigParser()
 config_object.read("config.ini")
@@ -22,9 +22,6 @@ site = 'https://www.oddsportal.com'
 
 games = ['football']
   
-db = get_mongoDb(mongoUri)
-collection = db.ODDS 
-
 def scrap(game, obj):
   try:
     print("SCRAPING FROM:", game)
@@ -45,14 +42,15 @@ def scrap(game, obj):
         if url in allUrls:
           continue
         allUrls.append(url)
-      obj['races'].append({'raceURL':url, 'country':one.get('country-name'), "season": getValue('https://www\.oddsportal\.com/.*?/.*?/(.*?)/', url), 'game':game, 'Odds':bets(url), 'Time':one.get('date-start-base'), 'Home':one.get('home-name'), 'Away': one.get('away-name'), 'H Score':one.get('homeResult'), 'A Score':one.get('awayResult')})
+      obj['races'].append({'raceURL':url, 'country':one.get('country-name'), "league": getValue('https://www\.oddsportal\.com/.*?/.*?/(.*?)/', url), 'game':game, 'Odds':bets(url), 'Time':one.get('date-start-base'), 'Home':one.get('home-name'), 'Away': one.get('away-name'), 'H Score':one.get('homeResult'), 'A Score':one.get('awayResult')})
       #break #testing
   except Exception as ex:
     print(ex)
 
   
-def start():
-  obj = {'yearURL':'', 'races':[]}
+def start(db):
+  collection = db.ODDS
+  obj = {'yearURL':'', 'year':'', 'races':[]}
   #'''
 #  executor = concurrent.futures.ThreadPoolExecutor(max_workers=maxT)
   if True:
@@ -60,12 +58,12 @@ def start():
     for g in games:
       #executor.submit(scrap, g, obj)
       scrap(g, obj)
-      
-  if collection.find_one({'yearURL':''}) == {}:
+
+  if collection.find_one({'yearURL':''}) == None:
     collection.insert_one(obj)
     print("INSERTING INTO DB")
   else:
-    collection.update_one({'yearURL':obj['yearURL']}, {'$unset':obj})
+    collection.update_one({'yearURL':obj['yearURL']}, {'$set':obj})
     print("UPDATEING INTO DB")
   '''
   for x in games:
@@ -73,4 +71,4 @@ def start():
   '''
     
 if __name__ == "__main__":
-  start()
+  start(db)
