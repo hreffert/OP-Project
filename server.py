@@ -15,7 +15,7 @@ db = mongodb_client.db
 
 @app.route('/')
 def index():
-  cur = db.TEST.aggregate([
+  cur = db.ODDS.aggregate([
                             {
                               '$project': {
                                 'races': {
