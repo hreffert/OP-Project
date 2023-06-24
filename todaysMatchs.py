@@ -20,7 +20,7 @@ mongoUri = credentails['mongo']
 
 site = 'https://www.oddsportal.com'
 
-games = ['football', 'basketball', 'baseball', 'hockey', 'tennis', 'american-football', 'aussie-rules', 'badminton', 'beach-soccer', 'beach-volleyball', 'boxing', 'cricket', 'darts', 'esports', 'futsal', 'mma', 'pesapallo', 'rugby-league', 'rugby-union', 'table-tennis', 'volleyball', 'water-polo']
+games = ['football']
   
 db = get_mongoDb(mongoUri)
 collection = db.ODDS 
@@ -55,12 +55,18 @@ def start():
   obj = {'yearURL':'', 'races':[]}
   #'''
 #  executor = concurrent.futures.ThreadPoolExecutor(max_workers=maxT)
-#  if True:
-  with concurrent.futures.ThreadPoolExecutor(max_workers=maxT) as executor:
+  if True:
+#  with concurrent.futures.ThreadPoolExecutor(max_workers=maxT) as executor:
     for g in games:
-      executor.submit(scrap, g, obj)
+      #executor.submit(scrap, g, obj)
+      scrap(g, obj)
       
-  collection.insert_one(obj)
+  if collection.find_one({'yearURL':''}) == {}:
+    collection.insert_one(obj)
+    print("INSERTING INTO DB")
+  else:
+    collection.update_one({'yearURL':obj['yearURL']}, {'$unset':obj})
+    print("UPDATEING INTO DB")
   '''
   for x in games:
     scrap(x, obj) 
