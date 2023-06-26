@@ -14,136 +14,43 @@
 	</head>
 	<body>
 	<section class="ftco-section">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row justify-content-center">
-				<div class="col-lg-8 text-center mb-5">  
+				<div class="text-center">  
 				  <!--<h2 class="heading-section">Add ASIN</h2>-->
-				  <div class="row">
-			      <div class="form-group" style="display: flex;flex-direction: row;">
-			        <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-mdb-toggle="dropdown" aria-expanded="false">DataFrame</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dfDD">
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="allSelections" />
-                          <label class="form-check-label" for="Checkme4">Select All</label>
-                        </div>
-                      </a>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="Database" />
-                                <label class="form-check-label" for="Checkme1">Database</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="TMatches" />
-                                <label class="form-check-label" for="Checkme2">Today's Matches</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="UpEvents" />
-                                <label class="form-check-label" for="Checkme3">Upcoming Events</label>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+				  <div class="row" style="width: 840px;">
+			      <div class="form-group">
+              <div class="col-md-3">
+  			        <label>Database</label>
+                <select id="dfDD" multiple="multiple" class='dropDown'>
+                  <option value="Database">Database</option>
+                  <option value="TMatches">Today's Matches</option>
+                  <option value="UpEvents">Upcoming Events</option>
+                </select>
               </div>
-			        <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-mdb-toggle="dropdown" aria-expanded="false">Country Selection</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="countryDD">
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="allSelections" />
-                                <label class="form-check-label" for="Checkme4">Select All</label>
-                            </div>
-                        </a>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>
-<!--                    <li>
-                      <div class="form-check">
-                          <input class="form-control" autocomplete="off" type="text" id="searchCountry" />
-                      </div>
-                    </li>
-                    <li><hr class="dropdown-divider" /></li>-->
-                  {% for item in data.country %}
-                    <li>
-                      <a class="dropdown-item" href="#">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="{{item}}" />
-                          <label class="form-check-label" for="Checkme1">{{item}}</label>
-                        </div>
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
+              <div class="col-md-3">
+  			        <label>Country</label>
+                <select id="countryDD" multiple="multiple">
+                    {% for item in data.country %}
+                    <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </select>
               </div>
-              <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-mdb-toggle="dropdown" aria-expanded="false">League Selection</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="leagueDD">
-                  <li>
-                      <a class="dropdown-item" href="#">
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" value="allSelections" />
-                              <label class="form-check-label" for="Checkme4">Select All</label>
-                          </div>
-                      </a>
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-<!--                  <li>
-                      <a class="dropdown-item" href="#">
-                          <div class="form-check">
-                              <input class="form-check-input" type="text" id="searchLeague" />
-                              <label class="form-check-label" for="Checkme4">search</label>
-                          </div>
-                      </a>
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>-->
-                {% for item in data.league %}
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{item}}" />
-                        <label class="form-check-label" for="Checkme1">{{item}}</label>
-                      </div>
-                    </a>
-                  </li>
-                {% endfor %}
-                </ul>
+              <div class="col-md-3">
+  			        <label>League</label>
+                <select id="leagueDD" multiple="multiple">
+                    {% for item in data.league %}
+                    <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </select>
               </div>
-              <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton4" data-mdb-toggle="dropdown" aria-expanded="false">Season Selection</button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="seasonDD">
-                  <li>
-                      <a class="dropdown-item" href="#">
-                          <div class="form-check">
-                              <input class="form-check-input" type="checkbox" value="allSelections" />
-                              <label class="form-check-label" for="Checkme4">Select All</label>
-                          </div>
-                      </a>
-                  </li>
-                  <li><hr class="dropdown-divider" /></li>
-                {% for item in data.seasons %}
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{item}}" />
-                        <label class="form-check-label" for="Checkme1">{{item}}</label>
-                      </div>
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
+              <div class="col-md-3">
+  			        <label>Seasons</label>
+                <select id="seasonDD" multiple="multiple">
+                    {% for item in data.seasons %}
+                    <option value="{{item}}">{{item}}</option>
+                    {% endfor %}
+                </select>
               </div>
               <!--<div class="range_container">
                   <div class="sliders_control">
@@ -260,9 +167,11 @@
 -->				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-12">
-				  <button id="results" class="btn btn-sm btn-success">START SCRAPPING</button>
-				  <button id="tResults" class="btn btn-sm btn-success">START TODAY MATCHS SCRAPPING</button>
+				<div class="col-lg-12">
+		      <div class="col text-center">
+				    <button id="results" class="btn btn-sm btn-success">START SCRAPPING</button>
+				    <button id="tResults" class="btn btn-sm btn-success">START TODAY MATCHS SCRAPPING</button>
+			    </div>
 					<div class="table-wrap">
 						<table class="table table-responsive-xl" >
 						  <thead>
@@ -295,13 +204,18 @@
 		</div>
 	</section>
 
-	<script src="static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<!--	<script src="static/js/jquery.min.js"></script>
   <script src="static/js/popper.js"></script>
-  <script src="static/js/bootstrap.min.js"></script>
-  <script src="static/js/main.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>-->
+  <!--<script src="static/js/main.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    .dropdown {margin-right:10px;}    
+    .dropDown {margin-right:10px;}    
     button {
       margin: 1px;
     }
@@ -309,17 +223,37 @@
       max-height: 280px;
       overflow-y: auto;
     }
+    table th {
+   text-align: center; 
+   }
+
+    .table {
+       margin: auto;
+       width: 80% !important; 
+    }
   </style>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        ['#countryDD', '#leagueDD', '#dfDD', '#seasonDD'].forEach(function(i){
+          $(i).multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true
+          });
+        })
+    });
+  </script>
   <script>
+    $('.dropDown').multiselect({onChange: function(element, checked) {filter()}}) 
     filter()
-    $('.dropdown').click(function(e){
+    
+    /*$('.dropdown').click(function(e){
       let a = $(this).find('ul')
       if (a.hasClass('show')){
         $(this).find('ul').removeClass('show')
       }else{
         $(this).find('ul').addClass('show')
       }
-    })
+    })*/
     
     $('[name="oddsc"]').click(function(e){
       if($(this).val() == 'between'){
@@ -331,7 +265,7 @@
       }
     })
     
-    $('.dropdown-item').click(function(e){
+    /*$('.dropDown').click(function(e){
       //console.log(getFilterData())
       let button = $(this).find('input') 
       if (button.attr('value') == 'allSelections'){
@@ -343,7 +277,7 @@
         }
       }
       filter()
-    })
+    })*/
     
     $('.btn.btn-sm.btn-success').click(function(e){
       $.ajax({
@@ -381,13 +315,7 @@
     }
 
     function getCheckedFields(id){
-      let k = []
-      $(`#${id} li input:checked`).each(function(e, ele){
-        if (ele.value != 'allSelections'){
-          k.push(ele.value)
-        }
-      })
-      return k
+      return $(`#${id} option:selected`).map(function(i, v){return $(this).val()}).toArray() 
     }
     
     function getFilterData(){

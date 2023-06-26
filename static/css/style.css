@@ -2526,7 +2526,7 @@ input[type="button"].btn-block {
 .dropleft {
   position: relative; }
 
-.dropdown-toggle {
+/*.dropdown-toggle {
   white-space: nowrap; }
   .dropdown-toggle::after {
     display: inline-block;
@@ -2538,7 +2538,7 @@ input[type="button"].btn-block {
     border-bottom: 0;
     border-left: 0.3em solid transparent; }
   .dropdown-toggle:empty::after {
-    margin-left: 0; }
+    margin-left: 0; }*/
 
 .dropdown-menu {
   position: absolute;
@@ -8184,7 +8184,7 @@ h1, h2, h3, h4, h5,
   
 
 .table {
-  min-width: 1000px !important;
+  min-width: 1000px;
   width: 100%;
   -webkit-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
   -moz-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
